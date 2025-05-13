@@ -59,3 +59,49 @@ label {
   font-style: italic;
   color: #888;
 }
+
+
+
+#map svg circle,
+.legend-item::before {
+  --color-departures: steelblue;
+  --color-arrivals: darkorange;
+  --color: color-mix(
+    in oklch,
+    var(--color-departures) calc(100% * var(--departure-ratio)),
+    var(--color-arrivals)
+  );
+}
+
+/* Legend container */
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 1.5em;
+  margin-block: 1em;
+  font-family: sans-serif;
+  font-size: 0.9em;
+}
+
+.legend-label {
+  font-weight: bold;
+  color: #666;
+}
+
+/* Each legend item */
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.3em;
+}
+
+/* Colored swatch */
+.legend-item::before {
+  content: "";
+  width: 1em;
+  height: 1em;
+  background: var(--color);
+  border-radius: 50%;
+  border: 1px solid black;
+  display: inline-block;
+}

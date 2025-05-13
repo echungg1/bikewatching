@@ -73,7 +73,7 @@ function getCoords(station) {
     const arrivals = d3.rollup(
         trips,
         (v) => v.length,
-        (d) => d.start_station_id,
+        (d) => d.end_station_id,
       );
   
     // Update each station..
@@ -89,7 +89,7 @@ function getCoords(station) {
   
   map.on('load', async () => {
     const svg = d3.select('#map').select('svg');
-  
+    
     map.addSource('boston_route', {
       type: 'geojson',
       data: 'https://bostonopendata-boston.opendata.arcgis.com/datasets/boston::existing-bike-network-2022.geojson',
@@ -149,6 +149,7 @@ function getCoords(station) {
     }
 
     stations = computeStationTraffic(stations, trips);
+    let stationFlow = d3.scaleQuantize().domain([0, 1]).range([0, 0.5, 1]);
   
     const radiusScale = d3
       .scaleSqrt()
@@ -172,13 +173,21 @@ function getCoords(station) {
     //       .text(`${d.totalTraffic} trips (${d.departures} departures, ${d.arrivals} arrivals)`);
     //   });
 
-    let stationFlow = d3.scaleQuantize().domain([0, 1]).range([0, 0.5, 1]);
+    
 
     const circles = svg
   .selectAll('circle')
   .data(stations, (d) => d.short_name) // Use station short_name as the key
   .enter()
   .append('circle')
+  .each(function (d) {
+    // Add <title> for browser tooltips
+    d3.select(this)
+      .append('title')
+      .text(
+        `${d.totalTraffic} trips (${d.departures} departures, ${d.arrivals} arrivals)`,
+      );
+  })
   .style('--departure-ratio', (d) =>
     stationFlow(d.totalTraffic > 0 ? d.departures / d.totalTraffic : 0.5),
   );
@@ -230,6 +239,7 @@ function getCoords(station) {
       
       timeSlider.addEventListener('input', updateTimeDisplay);
       updateTimeDisplay();
+      
   });
   
 

@@ -7,6 +7,7 @@ body {
   display: flex;
   justify-content: center; /* Center horizontally */
   align-items: center; /* Center vertically */
+  padding: 2em 1em;
 }
 
 #map {
@@ -31,4 +32,30 @@ body {
     stroke: white;
     stroke-width: 1;
     pointer-events: auto;
+    --color-departures: steelblue;
+    --color-arrivals: darkorange;
+    --color: color-mix(
+    in oklch,
+    var(--color-departures) calc(100% * var(--departure-ratio)),
+    var(--color-arrivals)
+    );
+    fill: var(--color);
+}
+
+header {
+    margin-bottom: 2em;
+  }
+
+label {
+  margin-left: auto;
+}
+
+#time-display,
+#any-time {
+  display: block;
+}
+
+#any-time {
+  font-style: italic;
+  color: #888;
 }
